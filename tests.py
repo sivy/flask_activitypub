@@ -26,4 +26,4 @@ class FollowingResource(ActivityPubCollection):
 ap_app.user_handler(UserResource)
 ap_app.following_handler(FollowingResource)
 
-# app.run()
+app.run()

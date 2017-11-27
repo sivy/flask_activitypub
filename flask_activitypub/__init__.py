@@ -69,7 +69,7 @@ class ActivityPubResource(Resource):
             ),
             to=to, cc=cc,
             object=vocab.Note(
-                id,
+                post_id,
                 url=post_url,
                 content=content))
 
@@ -80,6 +80,12 @@ class ActivityPubResource(Resource):
             "ap_user", obj_id=uri_or_id
         ) if local else uri_or_id
         return vocab.Person(person_id, **kwargs)
+
+    def create_follow(self, uri_or_id, local=True, **kwargs):
+        person_id = url_for(
+            "ap_user", obj_id=uri_or_id
+        ) if local else uri_or_id
+        return vocab.Follow(person_id, **kwargs)
 
     def get_object(self, handle, obj_id):
         """
