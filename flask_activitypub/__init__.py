@@ -46,7 +46,7 @@ class ActivityPubResource(Resource):
     def _post_url(cls, handle, post_number):
         return url_for("post", handle=handle, obj_id=post_number)
 
-    def create_post(self, content, handle, to, cc, context=None):
+    def activity_post(self, content, handle, to, cc, context=None):
         post_number = str(u['metrics']['post_count'])
         user_id = url_for("ap_user", handle=handle)
 
@@ -75,15 +75,15 @@ class ActivityPubResource(Resource):
 
         return create
 
-    def create_person(self, uri_or_id, local=True, **kwargs):
+    def activity_person(self, uri_or_id, local=True, **kwargs):
         person_id = url_for(
             "ap_user", obj_id=uri_or_id
         ) if local else uri_or_id
         return vocab.Person(person_id, **kwargs)
 
-    def create_follow(self, uri_or_id, local=True, **kwargs):
+    def activity_follow(self, uri_or_id, local=True, **kwargs):
         person_id = url_for(
-            "ap_user", obj_id=uri_or_id
+            "ap_follow", obj_id=uri_or_id
         ) if local else uri_or_id
         return vocab.Follow(person_id, **kwargs)
 
@@ -96,8 +96,8 @@ class ActivityPubResource(Resource):
     def get(self, handle, obj_id):
         """
         """
-        # if not self.check_accept_headers(request):
-        #     abort(400)
+        if not self.check_accept_headers(request):
+            abort(406)
         
         data = self.get_object(handle, obj_id)
 
