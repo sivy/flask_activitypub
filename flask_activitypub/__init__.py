@@ -165,25 +165,30 @@ class ActivityPub(object):
         self.activity_pub_api.add_resource(
             cls, path, endpoint="ap_%s" % endpoint)
     
-    # def user_handler(self, func):
-    #     self.add_handler('user', '/user/<str:handle>', "get", func)
+    def user_handler(self, cls):
+        self.add_handler(
+            "user", "/<string:handle>", cls)
 
-    # def post_user_handler(self, func):
-    #     self.add_handler('/user/<str:handle>', "get", func)
-
-    # def get_outbox(self, func):
-    #     self.add_handler('/<str:handle>/outbox', "get", func)
-    
-    # def inbox(self):
-    #     self.add_handler('/<str:handle>/inbox', method, cls)
+    def post_handler(self, cls):
+        self.add_handler(
+            "post", '/user/<string:handle>/<obj_id>', cls)
 
     def following_handler(self, cls):
         self.add_handler(
             "following", "/<string:handle>/following", cls)
     
-    # def followers(self):
-    #     self.add_handler('/<str:handle>/followers', method, cls)
+    def outbox_handler(self, cls):
+        self.add_handler(
+            "outbox", '/<string:handle>/outbox', cls)
     
-    # def likes(self):
-    #     self.add_handler('/<str:handle>/likes', method, cls)
+    def inbox_handler(self, cls):
+        self.add_handler(
+            "inbox", '/<string:handle>/inbox', cls)
 
+    def followers_handler(self):
+        self.add_handler(
+            "followers", '/<str:handle>/followers', cls)
+    
+    def liked_handler(self):
+        self.add_handler(
+            "liked", '/<str:handle>/likes', cls)
