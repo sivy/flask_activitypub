@@ -17,9 +17,10 @@ class PostResource(ActivityPubResource):
 
     def get_object(self, handle, post_id):
         # user = storage.get_user_by_handle(handle)
-        return self.activity_post(
-            shandle, content, handle, to, cc, context=None).json()
-
+        # post = storage.get_post(post_id)
+        # return self.activity_post(
+        #    post.content, handle, post.to, post.cc).json()
+        return {}
 
 class FollowingResource(ActivityPubCollection):
 
