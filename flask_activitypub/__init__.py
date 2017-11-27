@@ -46,7 +46,7 @@ class ActivityPubResource(Resource):
     def _post_url(cls, handle, post_number):
         return url_for("post", handle=handle, obj_id=post_number)
 
-    def create_post(self, content, handle, to, cc):
+    def create_post(self, content, handle, to, cc, context=None):
         post_number = str(u['metrics']['post_count'])
         user_id = url_for("ap_user", handle=handle)
 
@@ -73,34 +73,13 @@ class ActivityPubResource(Resource):
                 url=post_url,
                 content=content))
 
-        create =  {
-            'id': id+'/activity',
-            'type': 'Create',
-            '@context': DEFAULT_CONTEXT,
-            'actor': u['id'],
-            'published': time,
-            'to': to,
-            'cc': cc,
-            'object': {
-                'id': id,
-                'type': 'Note',
-                'summary': None,
-                'content': content,
-                'inReplyTo': None,
-                'published': time,
-                'url': note_url,
-                'attributedTo': u['id'],
-                'to': to,
-                'cc': cc,
-                'sensitive': False
-            },
-            'signature': {
-                'created': time,
-                'creator': u['id']+'?get=main-key',
-                'signatureValue': sign_object(u, content),
-                'type': 'rsa-sha256'
-            }
-        }
+        return create
+
+    def create_person(self, uri_or_id, local=True, **kwargs):
+        person_id = url_for(
+            "ap_user", obj_id=uri_or_id
+        ) if local else uri_or_id
+        return vocab.Person(person_id, **kwargs)
 
     def get_object(self, handle, obj_id):
         """
