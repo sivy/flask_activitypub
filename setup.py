@@ -15,7 +15,6 @@ setup(
     author_email = "steveivy@gmail.com",
     description = ("A toy implementation of ActivityPub for Flask applications"),
     license = "Mozilla Public License",
-    url = "http://packages.python.org/an_example_pypi_project",
     packages=['flask_activitypub'],
     long_description=read('README.md'),
     install_requires=[
