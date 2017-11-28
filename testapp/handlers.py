@@ -26,6 +26,7 @@ class UserResource(ActivityPubResource):
     def get_object(self, handle, obj_id=None):
         # user = storage.get_user_by_handle(handle)
         LOG.debug("UserResource.get_object: %s", handle)
+        
         user = db_fetch()
 
         # return self.activity_person(
