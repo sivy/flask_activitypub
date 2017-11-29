@@ -20,17 +20,13 @@ app = Flask("test app")
 activity_app = ActivityPub(app)
 ```
 
-This adds the ActivityPub extension, which provides a method for adding handlers for each ActivityPub endpoint:
+This adds the ActivityPub extension, which provides a method for adding handlers for each ActivityPub endpoint.
 
-```python
-activity_app.follow_handler(FollowResource)
-```
-
-`FollowResource` is a subclass of `ActivityPubCollection`, a superclass provided by Flask-ActivityPub that does all request handling and data marshalling. Subclass handlers implement either `get_object` (for `ActivityPubResource` subclasses) or `get_objects` (for `ActivityPubCollection` subclasses).
+`FollowingProvider` here is a subclass of `ActivityPubProvider`, an abstract superclass provided by Flask-ActivityPub that defines the `get_*`, 
 
 ```python
 
-class FollowingResource(ActivityPubCollection):
+class FollowingProvider(ActivityPubProvider):
     """
     Resource returning a representation of a 
     Follow
@@ -41,7 +37,26 @@ class FollowingResource(ActivityPubCollection):
             self.create_follow(handle, follow.id) for 
             follow in user.follow_collection]
 
+    def get_object(self, handle, obj_id):
+        user = storage.get_user_by_handle(handle)
+        return [
+            self.create_follow(handle, follow.id) for 
+            follow in user.follow_collection]
+
+    def create_object(self, handle, **kwargs):
+        user = storage.get_user_by_handle(handle)
+        actor = kwargs.get("actor")
+
+    def delete_object(self, handle, obj_id):
+        pass
+
+
+# Set FollowingProvider as the provider for the follow endpoint:
+activity_app.follow_provider(FollowingProvider)
 ```
+
+The method `get_objects` is called by the `get()` request handler to return data for the request.
+
 
 ### Acknowledgements
 
