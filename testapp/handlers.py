@@ -1,5 +1,7 @@
 import logging
 
+from flask import request, url_for
+
 from flask_activitypub import (
     ActivityPub, ActivityPubResource, ActivityPubCollection)
 
@@ -17,6 +19,8 @@ def db_fetch(uri):
         return db[uri]
     return None
 
+def uri_for_user(handle):
+    return url_for('user', handle=handle)
 
 class UserResource(ActivityPubResource):
     """
@@ -26,8 +30,8 @@ class UserResource(ActivityPubResource):
     def get_object(self, handle, obj_id=None):
         # user = storage.get_user_by_handle(handle)
         LOG.debug("UserResource.get_object: %s", handle)
-        
-        user = db_fetch()
+        user_id = uri_for_user(handle)
+        user = db_fetch(user_id)
 
         # return self.activity_person(
         #     handle, local=True).json()
