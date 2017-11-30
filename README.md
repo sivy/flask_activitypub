@@ -28,8 +28,7 @@ This adds the ActivityPub extension, which provides a method for adding handlers
 
 class FollowingProvider(ActivityPubProvider):
     """
-    Resource returning a representation of a 
-    Follow
+    Data provider for Follow data
     """
     def get_objects(self, handle):
         user = storage.get_user_by_handle(handle)
