@@ -50,8 +50,9 @@ class ActivityPubResource(Resource):
         super(ActivityPubResource, self).__init__()
 
         self.data_provider = None
-        if getattr(self, "endpoint", None):
-            self.data_provider = current_app.data_providers.get(self.endpoint)
+        endpoint = getattr(self, "endpoint", None)
+        if endpoint:
+            self.data_provider = current_app.data_providers.get(endpoint)
 
     # @classmethod
     # def _post_url(cls, handle, post_number):
@@ -120,6 +121,21 @@ class ActivityPubCollection(ActivityPubResource):
     Base class for AP collections
     """
     pass
+
+class UserResource(ActivityPubResource):
+    """
+    User endpoint
+    """
+    endpoint = "user"
+
+    # /<string:handle>
+    def get(self, handle):
+        uri = url_for("ap_user", handle=handle)
+
+        if self.data_provider:
+            user = self.data_provider.get_object(handle)
+
+        return user
 
 
 class FollowingCollection(ActivityPubCollection):

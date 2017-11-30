@@ -6,6 +6,8 @@ from flask import request, url_for, current_app
 from flask_restful import Api, Resource, abort
 from activipy import vocab
 from collections import Iterable
+from flask_activitypub.resources import (
+    UserResource, FollowingCollection)
 
 # from functools import wraps
 
@@ -32,11 +34,17 @@ class ActivityPub(object):
 
         self.activity_pub_api = Api(app)
 
-        self.handler_classes = {}
+        self.data_providers = {}
 
         self.activity_pub_api.add_resource(
-            ActivityPubResource, "/user/<string:handle>",
+            UserResource, "/user/<string:handle>",
             endpoint="ap_user")
+
+        self.activity_pub_api.add_resource(
+            FollowingCollection, "/user/<string:handle>/following",
+            endpoint="ap_following")
+
+
         # app.add_resource("/<str:handle>inbox", self.inbox)
         # app.add_resource("/<str:handle>/outbox", self.outbox)
         # app.add_resource("/<str:handle>/following", self.following)
@@ -64,9 +72,8 @@ class ActivityPub(object):
     #     self.activity_pub_api.add_resource(
     #         cls, path, endpoint=endpoint_key)
 
-    def add_data_provider(self, endpoint, f):
-        self._providers[endpoint] = f
-
+    def add_data_provider(self, endpoint, cls):
+        self.data_providers[endpoint] = cls
 
     def user_handler(self, cls):
         self.add_handler(

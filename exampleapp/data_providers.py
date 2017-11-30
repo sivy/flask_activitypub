@@ -43,6 +43,7 @@ class FollowingProvider(AppProvider):
 
         return vocab.OrderedCollection([
             vocab.Follow({
+                "@id": follow.id,
                 "actor": user,
                 "object": follow.object
             }) for follow in user.follow_collection])
